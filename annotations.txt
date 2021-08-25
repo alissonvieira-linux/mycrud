@@ -1,0 +1,41 @@
+Fluxo da camada Database
+
+-> Classe será instanciada pelo model da entidade correspondente (tabela do banco, que será passada como argumento)
+-> No construct será feita a conexão com o banco
+
+
+Fluxo das camadas model
+ # Inserts
+	-> Para cada coluna da tabela, uma propriedade public na classe;
+	-> Método save usará essas propriedades para fazer o insert assim que for invocado.
+---------------------------------------------------------------------------------------------------------
+Próximo passo
+-> Ter apenas uma instancia da camada de modelo sendo criada dentro do service <- CONCLUÍDO.
+
+-> Criar uma classe model, da qual todo modelo se extenderá... Nela ficarão todas as tratativas genéricas com
+a classe database. Analisar a classe database, pois dela poderá ser obtida a classe responsável pelos models. <- OK.
+
+-> Criar Helper para tratar da montagem da query no insert e no update. <- Inviável.
+
+-> Analisar a possibilidade de implementar uma flag 'update' para aproveitar o método store tanto para criar
+quanto para atualizar os registros. (criar um método save dentro da model que identifica se é update ou insert);
+Para isso, criar uma propriedade $id dentro da camada de modelo. Se este estiver preenchido, o método save saberá
+que trata-se de um update... Se não, é o caso de insert. <- CONCLUÍDO.
+
+-> Implementar select apenas de campos específicos de todos os registros. <- CONCLUÍDO.
+
+-------------
+-> Resolver problema do save dentro das camadas de modelo (TALVEZ um helper).
+    Criar helper que será responsável por setar os campos da tabela dentro da aplicação. O mesmo
+    também será encarregado de repassar os campos e valores para dentro da camada database.
+-------------> CONCLUÍDO.
+
+-> Criar uma classe Service da qual todo service se extenderá (assim como feito para a classe Model).
+
+#### Método para resolução
+-> Filtrar o que diz respeito a camada database, depois aos models e, por último, da camada dos services.
+
+O Grande objetivo
+    -> Criar uma classe Router, para cadastrar as rotas e seus tipos HTTP, atribuindo
+    o serviço a ser chamado quando tal rota for acessada.
+
