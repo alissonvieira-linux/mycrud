@@ -1,7 +1,7 @@
 <?php
 header('Content-Type: application/json');
 
-require_once '../vendor/autoload.php';
+require __DIR__.'/vendor/autoload.php';
 
 if ($_GET['url']) {
     $url = explode('/', $_GET['url']);
