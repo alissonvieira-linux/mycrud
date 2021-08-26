@@ -1,10 +1,10 @@
 <?php
 
-namespace App\Services;
+namespace App\Controllers;
 
 use App\Models\User;
 
-class UserService
+class UserController
 {
     private $user;
 
@@ -15,11 +15,12 @@ class UserService
 
     public function get($id = null)
     {
-        if ($id) {
-           return $this->user::where('id', $id);
-        }
+        return $this->user->select();
+        // if ($id) {
+        //    return $this->user::where('id', $id);
+        // }
 
-        return $this->user::all();
+        // return $this->user::all();
     }
 
     public function post($id = null)

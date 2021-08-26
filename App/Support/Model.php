@@ -3,22 +3,47 @@
 namespace App\Support;
 
 use App\Support\Helpers\Table;
+use \PDO;
+use \PDOException;
+use \Exception;
 
 class Model
 {
-    private static $table;
-    private static $pdo;
+    private $table;
+    private $pdo;
 
     public function __construct(string $table)
     {
-        self::$table = $table;
-        self::$pdo = new \PDO(DBDRIVE.': host='.DBHOST.'; dbname='.DBNAME, DBUSER, DBPASS);
+        $this->table = $table;
+        $this->pdo = new PDO(DBDRIVE.': host='.DBHOST.'; dbname='.DBNAME, DBUSER, DBPASS);
+    }
+
+    public function execute($query, $params = [])
+    {   
+        try {
+            $stmt = $this->pdo->prepare($query);
+            $stmt->execute($params);
+
+            return $stmt->fetchAll(PDO::FETCH_ASSOC);
+        } catch (PDOException $e) {
+            throw new Exception('Error: '.$e->getMessage());
+        }
+    }
+
+    public function select($fields = '*', $where = null, $order = null, $limit = null)
+    {
+        $where = strlen($where) ? 'WHERE '.$where : '';
+        $order = strlen($order) ? 'ORDER BY '.$order : '';
+        $limit = strlen($limit) ? 'LIMIT '.$limit : '';
+
+        $query = 'SELECT '.$fields.' FROM '.$this->table.' '.$where.' '.$order.' '.$limit;
+        return $this->execute($query);
     }
 
 
     public static function all()
     {
-        $sql = 'SELECT * FROM '.self::$table;
+        $sql = 'SELECT * FROM '.$this->table;
         $stmt = self::$pdo->prepare($sql);
         $stmt->execute();
 
@@ -29,39 +54,39 @@ class Model
         }
     }
 
-    public static function select($columns, $tableColumn = null, $value = null)
-    {
-        $string = "";
+    // public static function select($columns, $tableColumn = null, $value = null)
+    // {
+    //     $string = "";
 
-        foreach($columns as $column) {
-            $string .= "$column, ";
-        }
+    //     foreach($columns as $column) {
+    //         $string .= "$column, ";
+    //     }
 
-        $string = substr($string, 0, (strlen($string) -2));
+    //     $string = substr($string, 0, (strlen($string) -2));
 
-        if ($column && $value) {
-            $sql = "SELECT $string FROM ".self::$table." WHERE ". $tableColumn ." = :value";
-            $stmt = self::$pdo->prepare($sql);
-            $stmt->bindValue(':value', $value);
-            $stmt->execute();
+    //     if ($column && $value) {
+    //         $sql = "SELECT $string FROM ".self::$table." WHERE ". $tableColumn ." = :value";
+    //         $stmt = self::$pdo->prepare($sql);
+    //         $stmt->bindValue(':value', $value);
+    //         $stmt->execute();
 
-            if ($stmt->rowCount() > 0) {
-                return $stmt->fetch(\PDO::FETCH_ASSOC);
-            } else {
-                throw new \Exception('Nenhum registro encontrado.');
-            }
-        }
+    //         if ($stmt->rowCount() > 0) {
+    //             return $stmt->fetch(\PDO::FETCH_ASSOC);
+    //         } else {
+    //             throw new \Exception('Nenhum registro encontrado.');
+    //         }
+    //     }
 
-        $sql = "SELECT $string FROM ".self::$table;
-        $stmt = self::$pdo->prepare($sql);
-        $stmt->execute();
+    //     $sql = "SELECT $string FROM ".self::$table;
+    //     $stmt = self::$pdo->prepare($sql);
+    //     $stmt->execute();
 
-        if($stmt->rowCount() > 0) {
-            return $stmt->fetchAll(\PDO::FETCH_ASSOC);
-        } else {
-            throw new \Exception('Nenhum registro encontrado.');
-        }
-    }
+    //     if($stmt->rowCount() > 0) {
+    //         return $stmt->fetchAll(\PDO::FETCH_ASSOC);
+    //     } else {
+    //         throw new \Exception('Nenhum registro encontrado.');
+    //     }
+    // }
 
     public static function where($column, $value)
     {
