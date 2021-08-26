@@ -10,8 +10,8 @@ class User extends Model
     private $database;
 
     public $id = null;
-    public $username;
-    public $usermail;
+    public $name;
+    public $email;
 
     public function __construct()
     {
@@ -22,7 +22,7 @@ class User extends Model
     {
         $table = new Table();
 
-        $table->setFields(['id'=>$this->id, 'username'=>$this->username, 'usermail'=>$this->usermail]);
+        $table->setFields(['id'=>$this->id, 'name'=>$this->name, 'email'=>$this->email]);
         return $this->save($table, $flag);
     }
 }

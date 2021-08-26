@@ -2,6 +2,6 @@
 
 const DBDRIVE = 'mysql';
 const DBHOST = 'localhost';
-const DBNAME = 'ajax';
-const DBUSER = 'root';
-const DBPASS = '';
+const DBNAME = 'mycrud';
+const DBUSER = 'alisson';
+const DBPASS = 'alisson2002';

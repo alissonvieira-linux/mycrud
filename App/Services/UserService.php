@@ -28,15 +28,15 @@ class UserService
             return $this->put($_POST, $id);
         }
 
-        $this->user->username = $_POST['username'];
-        $this->user->usermail = $_POST['usermail'];
+        $this->user->username = $_POST['name'];
+        $this->user->usermail = $_POST['email'];
         return $this->user->store();
     }
 
     public function put($data, $id)
     {
-        $this->user->username = $data['username'];
-        $this->user->usermail = $data['usermail'];
+        $this->user->username = $data['name'];
+        $this->user->usermail = $data['email'];
         $this->user->id = $id;
         return $this->user->store('update');
     }
